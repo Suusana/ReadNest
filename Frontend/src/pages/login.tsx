@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LoginFun } from '@/service/loginService'
+import { setToken, setUser } from "@/store/user";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,25 @@ const Login = () => {
             setMsg("You should not enter empty value");
             return
         }
-        LoginFun(email, password, dispatch, setMsg, navigate);
+        const res = await LoginFun(email, password);
+        if (res.data.code === 1) {
+            // success
+            const token = res.data.data.jwt;
+            const user = res.data.data.user;
+    
+            dispatch(setToken(token))
+            dispatch(setUser(user))
+            if (res.data.data.user.username === "Admin") {
+                // jump to admin page
+                navigate("/admin");
+            } else {
+                navigate("/user")
+            }
+        } else {
+            const message = res.data.message
+            setMsg(message);
+        }
+        console.log(res.data.message);
     }
 
     return (

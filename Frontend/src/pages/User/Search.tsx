@@ -14,7 +14,8 @@ const Search = () => {
     const fetchBooks = async () => {
       setLoading(true);
       try {
-        await searchForBook(result, setBooks);
+        const res = await searchForBook(result);
+        setBooks({ books: res.data.data });
       } catch (error) {
         console.error("Error fetching books:", error);
       } finally {
@@ -40,7 +41,7 @@ const Search = () => {
               <div
                 key={book.bookId}
                 onClick={() => viewDetail(book, book.bookId)}
-                className="card max-w-xl w-full bg-base-100 shadow-lg rounded-xl overflow-hidden mb-5 active:ring-2 active:ring-blue-500 active:ring-offset-2 transition duration-200 mb-8"
+                className="card max-w-xl w-full bg-base-100 shadow-lg rounded-xl overflow-hidden active:ring-2 active:ring-blue-500 active:ring-offset-2 transition duration-200 mb-8"
               >
                 <figure>
                   <img src={book.cover} alt={book.cover} className="object-cover w-full h-60" />

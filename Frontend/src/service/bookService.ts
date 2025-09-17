@@ -1,52 +1,25 @@
-import { Book, bookData, EditbookType } from "@/types/book";
+import { bookData, EditbookType } from "@/types/book";
 import { http } from "@/utils";
 
 //load the books data
-export const fetchBooks = async (
-    Page: number, PageSize: number,
-    setTotal: (Total: number) => void,
-    setData: (data: { books: Book[] }) => void,
-) => {
-    try {
-        const res = await http.get("/api/booksData", {
-            params: {
-                page: Page,
-                pageSize: PageSize
-            }
-        });
-        console.log("kanwo:", res.data.data.tags)
-
-        const Total = res.data.data.total; //total records
-
-        setTotal(Total)
-        setData({ books: res.data.data.rows })
-        return res.data.data.tags
-    } catch (error) {
-        console.error("Error fetching books data:", error);
-    }
+export const fetchBooks = async (Page: number, PageSize: number,) => {
+    return await http.get("/api/booksData", {
+        params: {
+            page: Page,
+            pageSize: PageSize
+        }
+    })
 };
 
-export const searchBooks = async (
-    Page: number, PageSize: number, SearchItem: string,
-    setNoResult: (noResult: boolean) => void,
-    setTotal: (Total: number) => void,
-    setData: (data: { books: Book[] }) => void
-) => {
-    const res = await http.get("/api/search", {
+//search books
+export const searchBooks = async (Page: number, PageSize: number, SearchItem: string,) => {
+    return await http.get("/api/search", {
         params: {
             page: Page,
             pageSize: PageSize,
             SearchItem: SearchItem
         }
     });
-    console.log(res.data.data)
-    if (res.data.data === "There is no result") {
-        setNoResult(true)
-    } else {
-        const Total = res.data.data.total; //total records
-        setTotal(Total)
-        setData({ books: res.data.data.rows })
-    }
 }
 
 export const deleteBooks = async (bookIds: number[] | Set<number>) => {
@@ -59,18 +32,8 @@ export const deleteBooks = async (bookIds: number[] | Set<number>) => {
 }
 
 // get all the categories
-export const fetchTags = async (
-    setTag: (tags: string[]) => void
-) => {
-    try {
-        const res = await http.get("/api/fetchTags")
-        console.log(res.data.data)
-
-        setTag(res.data.data)
-    } catch (error) {
-        console.error("Error fetching tags:", error);
-        throw error;
-    }
+export const fetchTags = async () => {
+    return await http.get("/api/fetchTags")
 }
 
 export const addBooks = async (Book: bookData, Img: File | null, Tags: string[]) => {
@@ -88,7 +51,6 @@ export const addBooks = async (Book: bookData, Img: File | null, Tags: string[])
         if (res.data.code === 0) {
             return 0;
         }
-        // console.log(res.data.data)
         return res.data.data;
     } catch (error) {
         console.error("Error adding BOOK:", error);
@@ -119,77 +81,39 @@ export const editThisBook = async (Book: EditbookType, Img: File | null, Tags: s
     }
 };
 
-export const fetchRecommend = async (setBooks: (data: { books: Book[] }) => void) => {
-    try {
-        const res = await http.get("/api/recommendBook");
-        setBooks({ books: res.data.data });
-    } catch (error) {
-        console.error("Error fetching books data:", error);
-    }
+export const fetchRecommend = async () => {
+    return await http.get("/api/recommendBook");
 }
 
-export const getTagsById = async (bookId: number, setTag: (tags: string[]) => void) => {
-    try {
-        const res = await http.get("/api/getTagsById", {
-            params: { bookId: bookId }
-        });
-        setTag(res.data.data);
-    } catch (error) {
-        console.error("Error fetching books data:", error);
-    }
+export const getTagsById = async (bookId: number) => {
+    return await http.get("/api/getTagsById", {
+        params: { bookId: bookId }
+    });
+
 }
 
-export const isBorrow = async (
-    username: string, bookName: string,
-    setisBorrow: (isBorrow: boolean) => void) => {
-    try {
-        const res = await http.get("/api/isborrow", {
-            params: {
-                username: username,
-                bookName: bookName
-            }
-        });
-        console.log(res.data)
-        if (res.data.data === null) {
-            setisBorrow(false);
-        } else {
-            setisBorrow(true);
+export const isBorrow = async (username: string, bookName: string) => {
+    return await http.get("/api/isborrow", {
+        params: {
+            username: username,
+            bookName: bookName
         }
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
+    });
 }
 
-export const borrowOrReturnBook = async (
-    bookName: string, username: string,
-    setQuantity: React.Dispatch<React.SetStateAction<number>>,
-    setisBorrow: (isBorrow: boolean) => void
-) => {
-    try {
-        const res = await http.get("/api/borrowBook", {
-            params: {
-                username: username,
-                bookName: bookName
-            }
-        });
-        console.log(res.data.data)
-        setQuantity((prev) => (res.data.data === "Borrow" ? prev - 1 : prev + 1));
-        setisBorrow(res.data.data === "Borrow");
-    } catch (error) {
-        console.error("Error borrowing book:", error);
-    }
+export const borrowOrReturnBook = async (bookName: string, username: string) => {
+    return await http.get("/api/borrowBook", {
+        params: {
+            username: username,
+            bookName: bookName
+        }
+    });
 }
 
-export const searchForBook = async (keyword: string, setBooks: (data: { books: Book[] }) => void) => {
-    try {
-        const res = await http.get("/api/searchForBook", {
-            params: {
-                keyword: keyword
-            }
-        });
-        // console.log(res.data.data)
-        setBooks({ books: res.data.data });
-    } catch (error) {
-        console.error("Error searching book:", error);
-    }
+export const searchForBook = async (keyword: string) => {
+    return await http.get("/api/searchForBook", {
+        params: {
+            keyword: keyword
+        }
+    });
 }

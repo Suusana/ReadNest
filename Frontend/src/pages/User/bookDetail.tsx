@@ -15,10 +15,32 @@ const BookDetail = () => {
   const [Quantity, setQuantity] = useState<number>(book.quantity);
   const [isborrow, setisBorrow] = useState<boolean>(); //all the categories
 
+  const getTagsByid = async () => {
+    try {
+      const res = await getTagsById(book.bookId)
+      setTags(res.data.data);
+    } catch (error) {
+      console.error("Error fetching books data:", error);
+    }
+  }
+
+  const checkIsBorrow = async () => {
+    try {
+      const res = await isBorrow(user.username, book.title)
+      if (res.data.data === null) {
+        setisBorrow(false);
+      } else {
+        setisBorrow(true);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
   useEffect(() => {
-    getTagsById(book.bookId, setTags)
+    getTagsByid();
     if (id) {
-      isBorrow(user.username, book.title, setisBorrow)
+      checkIsBorrow();
     }
   }, [book])
 
@@ -26,9 +48,15 @@ const BookDetail = () => {
     navigate(-1);
   };
 
-  const handleBorrow = (bookname: string) => {
+  const handleBorrow = async (bookname: string) => {
     setisBorrow((prev) => !prev);
-    borrowOrReturnBook(bookname, user.username, setQuantity, setisBorrow)
+    try {
+      const res = await borrowOrReturnBook(bookname, user.username)
+      setQuantity((prev) => (res.data.data === "Borrow" ? prev - 1 : prev + 1));
+      setisBorrow(res.data.data === "Borrow");
+    } catch (error) {
+      console.error("Error borrowing book:", error);
+    }
   }
 
   return (

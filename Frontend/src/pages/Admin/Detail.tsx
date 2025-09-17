@@ -9,16 +9,16 @@ const DetailPage = () => {
   const [Data, setData] = useState<Detail | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetchDetail(id);
-        setData(result)
-      } catch (error) {
-        console.error("fail:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const res = await fetchDetail(id);
+      setData(res.data.data)
+    } catch (error) {
+      console.error("fail:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [])
 

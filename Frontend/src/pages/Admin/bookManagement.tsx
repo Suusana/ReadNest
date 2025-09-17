@@ -18,7 +18,7 @@ const BookManage = () => {
 
   const { Page, setPage, PageSize, setPageSize, Total, setTotal } = usePage();
 
-  const { 
+  const {
     SearchItem, setSearchItem,
     showAlert, setShowAlert,
     prevSearchItem, setPrevSearchItem,
@@ -34,14 +34,14 @@ const BookManage = () => {
   const [CategoryTags, setCategoryTags] = useState<string[][]>([]); //when loading
 
   const {
-    selectedItems: selectedBooks, 
-    handleSelectAll, 
-    handleSelectItem, 
-    isAllSelected, 
+    selectedItems: selectedBooks,
+    handleSelectAll,
+    handleSelectItem,
+    isAllSelected,
     changePage
   } = useSelection(
-    Data?.books || [], 
-    (book) => book.bookId 
+    Data?.books || [],
+    (book) => book.bookId
   );
 
   const [EmptyInput, setEmptyInput] = useState({
@@ -64,28 +64,53 @@ const BookManage = () => {
   useEffect(() => {
     if (SearchItem.trim() === '' && prevSearchItem.trim() !== '') {
       // when the search bar become empty,then reload all the books data
-      fetchBooks(Page, PageSize, setTotal, setData);
+      loadBook();
     }
     setPrevSearchItem(SearchItem);
   }, [SearchItem]);
 
+  const loadBook = async () => {
+    try {
+      const res = await fetchBooks(Page, PageSize);
+      const Total = res.data.data.total; //total records
+      setTotal(Total)
+      setData({ books: res.data.data.rows })
+      return res
+    } catch (error) {
+      console.log("Fail to load books:", error)
+    }
+  }
+
+  const loadTags = async () => {
+    try {
+      const res = await fetchTags();
+      setTags(res.data.data)
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      throw error;
+    }
+  }
+  
   useEffect(() => {
     if (SearchItem.trim() === '') {
-      const data = fetchBooks(Page, PageSize, setTotal, setData);
-      fetchTags(setTags);
-      data.then(tags => {
-        setCategoryTags(tags);
-      })
+      loadBook().then((res) => {
+        if (res) {
+          const tags = res.data.data.tags;
+          setCategoryTags(tags);
+        }
+      });
+      loadTags();
     } else {
       Search();
     }
   }, [Page, PageSize, Total])
+
   const totalPages = Math.ceil(Total / PageSize); // Calculate total pages
 
   const handleSearchClick = async () => {
     if (SearchItem.trim() === '') {
       setShowAlert(true);
-      fetchBooks(Page, PageSize, setTotal, setData);
+      fetchBooks(Page, PageSize);
       return;
     }
     //reset the current page
@@ -93,9 +118,16 @@ const BookManage = () => {
     Search();
   };
 
-  const Search = () => {
+  const Search = async () => {
     try {
-      searchBooks(Page, PageSize, SearchItem, setNoResult, setTotal, setData)
+      const res = await searchBooks(Page, PageSize, SearchItem)
+      if (res.data.data === "There is no result") {
+        setNoResult(true)
+      } else {
+        const Total = res.data.data.total; //total records
+        setTotal(Total)
+        setData({ books: res.data.data.rows })
+      }
     } catch (error) {
       console.error("Error during search:", error);
     }

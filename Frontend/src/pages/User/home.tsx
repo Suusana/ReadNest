@@ -22,8 +22,17 @@ const Home = () => {
     navigate("/user" + path)
   }
 
+  const loadRecommendBooks = async () => {
+    try {
+      const res = await fetchRecommend();
+      setBooks({ books: res.data.data });
+    } catch (error) {
+      console.error("Error fetching books data:", error);
+    }
+  }
+
   useEffect(() => {
-    fetchRecommend(setBooks);
+    loadRecommendBooks();
   }, [])
 
 
@@ -38,7 +47,7 @@ const Home = () => {
   const handleSearch = () => {
     if (Value.trim() === "") {
       setEmpty(true)
-    }else{
+    } else {
       navigate("/user/search", { state: { query: Value } })
       setValue('')
     }

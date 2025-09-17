@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Borrowing = () => {
-  const [Data, setData] = useState<RecordRoot | null>(null);
+  const [Data, setData] = useState<RecordRoot>();
   const { Page, setPage, PageSize, setPageSize, Total, setTotal } = usePage();
   const totalPages = Math.ceil(Total / PageSize);
   const { changePage } = useSelection(Data?.records || [], (record) => record.recordId);
@@ -32,30 +32,49 @@ const Borrowing = () => {
   const [ErrorDate, setErrorDate] = useState(false);
   const navigate = useNavigate();
 
+  const loadRecords = async () => {
+    try {
+      const res = await fetchRecords(Page, PageSize);
+      const Total = res.data.data.total; //total records
+      setTotal(Total)
+      setData({ records: res.data.data.rows })
+    } catch (error) {
+      console.error("Error fetching records:", error);
+    }
+  }
+
+  const search = async () => {
+    const res = await searchRecords(
+      Page, PageSize, SearchItem,
+      SearchDate.startDate, SearchDate.endDate, Status)
+    if (res.data.code === 0) {
+      setNoResult(true)
+    } else {
+      const Total = res.data.data.total; //total records
+      setTotal(Total)
+      setData({ records: res.data.data.rows })
+    }
+  }
+
   useEffect(() => {
     if (SearchItem.trim() === '' && prevSearchItem.trim() !== '') {
       // when the search bar become empty,then reload all the books data
-      fetchRecords(Page, PageSize, setTotal, setData);
+      loadRecords();
     }
     setPrevSearchItem(SearchItem);
   }, [SearchItem]);
 
   useEffect(() => {
     if (SearchItem.trim() === '') {
-      fetchRecords(Page, PageSize, setTotal, setData);
+      loadRecords();
     } else {
-      searchRecords(
-        Page, PageSize, SearchItem,
-        SearchDate.startDate, SearchDate.endDate, Status,
-        setNoResult, setTotal, setData)
+      search()
     }
   }, [Page, PageSize])
 
   const handleSearchClick = async () => {
     await setPage(1);
-    searchRecords(Page, PageSize, SearchItem,
-      SearchDate.startDate, SearchDate.endDate, Status,
-      setNoResult, setTotal, setData)
+    search()
   };
 
   const handleStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {

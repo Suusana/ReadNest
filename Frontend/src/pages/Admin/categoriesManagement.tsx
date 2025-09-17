@@ -43,8 +43,19 @@ const Categories = () => {
   const [editcategory, setEditCategory] = useState<string>("");
   const [editdescription, setEditDescription] = useState<string>("");
 
+  const loadCategories = async ()=>{
+    try {
+      const res = await fetchCategories(Page, PageSize);
+      const Total = res.data.data.total; //total records
+      setTotal(Total)
+      setData({ categories: res.data.data.rows })
+  } catch (error) {
+      console.error("Error fetching books categories:", error);
+  }
+  }
+
   useEffect(() => {
-    fetchCategories(Page, PageSize, setTotal, setData);
+    loadCategories()
   }, [Page, PageSize, Total])
 
   const totalPages = Math.ceil(Total / PageSize);

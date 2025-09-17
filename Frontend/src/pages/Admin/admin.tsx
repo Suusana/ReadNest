@@ -25,7 +25,7 @@ const Admin = () => {
   // logout function
   const Logout = () => {
     dispatch(clearUserInfo())
-    navigate("/login")
+    navigate("/")
   }
 
   return <div>

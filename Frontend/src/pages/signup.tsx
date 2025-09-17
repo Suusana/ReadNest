@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RegisterFun } from "@/service/loginService";
+import { setToken, setUser } from "@/store/user";
 
 const Signup = () => {
     const navigate = useNavigate()
@@ -35,7 +36,18 @@ const Signup = () => {
             setMsg("The password does not match");
             return;
         }
-        RegisterFun(formData, setMsg, dispatch, navigate);
+        const res = await RegisterFun(formData);
+        if (res.data.code === 0) {
+            // username exist
+            setMsg(res.data.message)
+        } else {
+            //success, login automatically
+            const token = res.data.data.jwt;
+            const user = res.data.data.user;
+            dispatch(setToken(token))
+            dispatch(setUser(user))
+            navigate("/user")
+        }
     }
 
     return <div>
@@ -117,7 +129,7 @@ const Signup = () => {
                         Signup
                     </button>
                     <button
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("/")}
                         className="btn btn-active btn-info text-xl md:text-2xl mt-2">
                         Login
                     </button>
