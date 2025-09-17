@@ -81,28 +81,7 @@ public class recordService implements RecordService {
 
     @Override
     public List<userRecord> getRecordsByUsername(String username) {
-        List<Record> records = mapper.getRecordsByUsername(username);
-        List<userRecord> details = new ArrayList<>();
-        for (Record record : records) {
-            Book book = bookmapper.findByTitle(record.getBookName());
-            List<Integer> ids = bookcatemapper.getTagsIdsById(book.getBookId());
-            List<String> tags = categoriesmapper.findTagsByIds(ids);
-            userRecord detail = userRecord.builder()
-                    .recordId(record.getRecordId())
-                    .username(record.getUsername())
-                    .bookName(record.getBookName())
-                    .cover(book.getCover())
-                    .author(book.getAuthor())
-                    .borrowDate(record.getBorrowDate())
-                    .dueDate(record.getDueDate())
-                    .returnDate(record.getReturnDate())
-                    .status(record.getStatus())
-                    .tags(tags)
-                    .build();
-
-            details.add(detail);
-
-        }
-        return details;
+        List<userRecord> records = mapper.getUserRecords(username);
+        return records;
     }
 }

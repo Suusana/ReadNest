@@ -1,7 +1,6 @@
 package com.readnest.controller;
 
 import com.readnest.pojo.*;
-import com.readnest.pojo.Record;
 import com.readnest.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

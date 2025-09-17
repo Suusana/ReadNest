@@ -2,6 +2,7 @@ package com.readnest.mapper;
 
 import com.readnest.pojo.Record;
 import com.readnest.pojo.User;
+import com.readnest.pojo.userRecord;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -37,4 +38,6 @@ public interface recordMapper {
 
     @Select("select * from borrow_record where username = #{username}")
     List<Record> getRecordsByUsername(String username);
+
+    List<userRecord> getUserRecords(String username);
 }

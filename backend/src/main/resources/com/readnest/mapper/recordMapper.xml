@@ -50,5 +50,24 @@
             </if>
         </where>
     </select>
+    <select id="getUserRecords" resultType="com.readnest.pojo.userRecord" parameterType="String">
+        SELECT
+        r.record_id,
+        r.username,
+        r.book_name,
+        b.cover,
+        b.author,
+        r.borrow_date,
+        r.due_date,
+        r.return_date,
+        r.status,
+        c.category AS tag_name
+        FROM borrow_record r
+        JOIN book b ON r.book_name = b.title
+        LEFT JOIN book_categories bc ON b.book_id = bc.book_id
+        LEFT JOIN categories c ON bc.category_id = c.category_id
+        WHERE r.username = #{username}
+        ORDER BY r.record_id
+    </select>
 
 </mapper>

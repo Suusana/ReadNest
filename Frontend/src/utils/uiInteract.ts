@@ -4,8 +4,6 @@ export const openModal = (mode: string) => {
     modal.showModal();
 };
 
-
-
 export const closeDialog = (mode: string) => {
     const modal = document.getElementById(mode) as HTMLDialogElement;
     const modalBox = modal.querySelector('.modal-box') as HTMLElement;
