@@ -34,6 +34,9 @@ export const DeleteCategory = async (categoryIds: number[]) => {
 export const addCategory = async (category: CategoryType) => {
     try {
         const res = await http.put("/api/addCategory", category);
+        if (res.data.code === 0) {
+            return 0
+        } 
         return res.data.data;
     } catch (error) {
         console.error("Error adding category:", error);

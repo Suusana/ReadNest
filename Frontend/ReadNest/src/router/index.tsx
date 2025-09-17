@@ -1,60 +1,99 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { AuthRoute } from "@/components/AuthRoute"
-import Home from '@/pages/User/home'
-import Admin from '@/pages/Admin/admin'
-import Detail from '@/pages/Detail'
-import Login from '@/pages/login'
-import Signup from '@/pages/signup'
-import Analysis from '@/pages/Admin/analysis'
-import UserManage from '@/pages/Admin/userManagement'
-import BookManage from '@/pages/Admin/bookManagement'
-import Reservation from '@/pages/Admin/reservation'
-import Categories from '@/pages/Admin/categoriesManagement'
+import { lazy, Suspense } from 'react';
+import Loading from '@/components/Loading';
 
+const Login = lazy(() => import('@/pages/login'));
+const Signup = lazy(() => import('@/pages/signup'));
+const Home = lazy(() => import('@/pages/User/home'));
+const Admin = lazy(() => import('@/pages/Admin/admin'));
+const UserManage = lazy(() => import('@/pages/Admin/userManagement'));
+const BookManage = lazy(() => import('@/pages/Admin/bookManagement'));
+const Borrowing = lazy(() => import('@/pages/Admin/borrowingRecords'));
+const Categories = lazy(() => import('@/pages/Admin/categoriesManagement'));
+const Detail = lazy(() => import('@/pages/Admin/Detail'));
+const Info = lazy(() => import('@/pages/User/Info'));
+const Borrow = lazy(() => import('@/pages/User/Borrow'));
+const BookDetail = lazy(() => import('@/pages/User/bookDetail'));
+const Search = lazy(() => import('@/pages/User/Search'));
 
 const router = createBrowserRouter([
     {
-        path: '/login',
-        element: <Login />,
+        path: '/',
+        element: (
+            <Suspense fallback={<Loading />}>
+                <Login />
+            </Suspense>
+        ),
     },
     {
         path: '/signup',
-        element: <Signup />,
+        element: (
+            <Suspense fallback={<Loading />}>
+                <Signup />
+            </Suspense>
+        ),
     },
     {
-        path: '/home',
-        element: <AuthRoute><Home /></AuthRoute>,
-    },
-    {
-        path: '/detail',
-        element: <AuthRoute><Detail /></AuthRoute>,
+        path: '/user',
+        element: (
+            <AuthRoute>
+                <Suspense fallback={<Loading />}>
+                    <Home />
+                </Suspense>
+            </AuthRoute>
+        ),
+        children: [
+            {
+                path: 'myInfo',
+                element: <Info />
+            },
+            {
+                path: 'myBorrow',
+                element: <Borrow />
+            },
+            {
+                path:'bookDetail/:id',
+                element:<BookDetail/>
+            },
+            {
+                path: 'search',
+                element: <Search />
+            },
+        ],
     },
     {
         path: '/admin',
-        element: <AuthRoute><Admin /></AuthRoute>,
+        element: (
+            <AuthRoute>
+                <Suspense fallback={<Loading />}>
+                    <Admin />
+                </Suspense>
+            </AuthRoute>
+        ),
         children: [
             {
-                path: 'analysis',
-                element: <AuthRoute><Analysis /></AuthRoute>
-            },
-            {
                 path: 'usermanage',
-                element: <AuthRoute><UserManage /></AuthRoute>
-            }, 
+                element: <UserManage />
+            },
             {
                 path: 'bookmanage',
-                element: <AuthRoute><BookManage /></AuthRoute>
+                element: <BookManage />
             },
             {
-                path: 'appoint',
-                element: <AuthRoute><Reservation /></AuthRoute>
+                path: 'borrowing',
+                element: <Borrowing />
             },
             {
                 path: 'categories',
-                element: <AuthRoute><Categories /></AuthRoute>
+                element: <Categories />
             },
-        ]
+            {
+                path: 'detail/:id',
+                element: <Detail />
+            }
+        ],
     },
-])
+]);
 
 export { router }

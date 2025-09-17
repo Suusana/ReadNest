@@ -1,7 +1,12 @@
 export interface Category {
     categoryId: number,
     category: string,
-    description: string
+    description: string,
+    totalBooks: number
+}
+// the root state
+export interface CategoryRoot {
+    categories: Category[]
 }
 
 export interface CategoryType {
@@ -9,7 +14,3 @@ export interface CategoryType {
     description: string
 }
 
-// the root state
-export interface CategoryRoot {
-    categories: Category[]
-}

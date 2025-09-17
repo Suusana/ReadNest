@@ -11,4 +11,5 @@ public class Category {
     private Integer categoryId;
     private String category;
     private String description;
+    private Integer totalBooks;
 }

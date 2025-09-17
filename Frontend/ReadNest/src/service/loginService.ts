@@ -20,7 +20,7 @@ export const LoginFun = async (
             // jump to admin page
             navigate("/admin");
         } else {
-            navigate("/home")
+            navigate("/user")
         }
     } else {
         const message = res.data.message
@@ -33,7 +33,7 @@ export const RegisterFun = async (formData: any, setMsg: (msg: string) => void, 
     const res = await http.post("/api/register", formData);
     console.log(formData)
     if (res.data.code === 0) {
-        // username sxist
+        // username exist
         setMsg(res.data.message)
     } else {
         //success, login automatically
@@ -41,7 +41,7 @@ export const RegisterFun = async (formData: any, setMsg: (msg: string) => void, 
         const user = res.data.data.user;
         dispatch(setToken(token))
         dispatch(setUser(user))
-        navigate("/home")
+        navigate("/user")
     }
     console.log()
 }

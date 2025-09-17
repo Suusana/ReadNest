@@ -1,4 +1,3 @@
-import library from "@/assets/library.png"
 import user from "@/assets/users.png"
 import book from "@/assets/books.jpg"
 import appointment from "@/assets/appointment.png"
@@ -8,11 +7,6 @@ import { cardItem, menuItem, tableheader } from "@/types/staticData"
 //The Card List in the Dashboard
 export const CardList: cardItem[] = [
   {
-    key: "/analysis",
-    link: library,
-    title: 'Library Analysis',
-    content: "Efficient Statistics: Real-time data analysis to facilitate decision-making and optimize library operations.",
-  }, {
     link: user,
     key: "/usermanage",
     title: 'User Management',
@@ -28,10 +22,10 @@ export const CardList: cardItem[] = [
     title: 'Caterogies',
     content: "Easily manage book categorization so that every book is in the right place, opening up an efficient reading experience!",
   }, {
-    key: "/appoint",
+    key: "/borrowing",
     link: appointment,
-    title: 'Reservation',
-    content: "Readers can reserve books online, ensuring that you can get your favorite books at any time and improving the borrowing experience.",
+    title: 'Borrowing Records',
+    content: "Borrowing at your fingertips, record with your book journey - enjoy the efficient and convenient borrowing record module!",
   },
 ]
 
@@ -41,11 +35,6 @@ export const menuList: menuItem[] = [
     label: "Dashboard",
     key: '',
     icon: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-  },
-  {
-    label: "Library Analysis",
-    key: '/analysis',
-    icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
   },
   {
     label: "Users Management",
@@ -63,8 +52,8 @@ export const menuList: menuItem[] = [
     icon: "M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"
   },
   {
-    label: "Reservation",
-    key: "/appoint",
+    label: "Borrowing Records",
+    key: "/borrowing",
     icon: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
   },
 ]
@@ -77,27 +66,27 @@ export const BooksTableHeaders: tableheader[] = [
   },
   {
     title: "Author",
-    width: "w-1/6"
+    width: "w-1/12"
   },
   {
-    title: "Category",
-    width: "w-1/12"
+    title: "Category ",
+    width: "w-1/6 "
   },
   {
     title: "Description",
-    width: "w-1/5"
+    width: "w-1/6 "
   },
   {
     title: "Quantity",
-    width: "w-1/12"
+    width: "w-1/12 text-center"
   },
   {
     title: "Cover Page",
-    width: "w-1/6"
+    width: "w-1/12 text-center"
   },
   {
     title: "Operations",
-    width: "w-1/4 text-center"
+    width: "w-1/"
   },
 ]
 
@@ -109,7 +98,11 @@ export const CaterogiesHeaders: tableheader[] = [
   },
   {
     title: "Description",
-    width: "w-8/12"
+    width: "w-7/12"
+  },
+  {
+    title: "Total Type of Books",
+    width: "w-1/6 "
   },
   {
     title: "Operations",
@@ -120,22 +113,71 @@ export const CaterogiesHeaders: tableheader[] = [
 export const UsersHeaders: tableheader[] = [
   {
     title: "Avatar",
-    width: "w-1/5"
+    width: "w-1/4"
   },
   {
     title: "Username",
-    width: "w-1/5"
+    width: "w-1/4"
   },
   {
     title: "Name",
-    width: "w-1/5"
+    width: "w-1/4"
   },
   {
     title: "Email",
-    width: "w-1/5 "
+    width: "w-1/4 "
+  }
+]
+
+export const BorrowRecordHeader: tableheader[] = [
+  {
+    title: "Record ID",
+    width: "w-1/6"
+  },
+  {
+    title: "Username",
+    width: "w-1/6"
+  },
+  {
+    title: "Book Name",
+    width: "w-1/6"
+  },
+  {
+    title: "Borrow Date",
+    width: "w-1/6"
+  },
+  {
+    title: "Due Date",
+    width: "w-1/6"
+  },
+  {
+    title: "Return Date",
+    width: "w-1/6"
+  },
+  {
+    title: "Status",
+    width: "w-1/6"
   },
   {
     title: "Operation",
-    width: "w-1/5"
-  }
+    width: "w-1/6"
+  },
+]
+
+export const userMenu: menuItem[] = [
+  {
+    label: "Home",
+    key: "",
+    icon: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+  },
+  {
+    label: "Borrow",
+    key: "/myBorrow",
+    icon: "M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+  },
+  {
+    label: "My Info",
+    key: "/myInfo",
+    icon: "M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+  },
 ]

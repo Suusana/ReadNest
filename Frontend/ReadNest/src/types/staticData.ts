@@ -58,3 +58,10 @@ export type TableProps = {
     isAllSelected ?:boolean
     handleSelectAll ?: () => void
 }
+
+// per page props
+export interface PerPageProps {
+    PageSize: number
+    Total: number
+    setPageSize: (size: number) => void
+}

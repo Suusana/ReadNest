@@ -7,11 +7,12 @@ export interface UserState {
     name: string
     email: string
     password: string
+    avatar: string
 }
 
 //registering user with their provided info
 export interface AuthState {
-    username:string;
+    username: string;
     name: string;
     email: string;
     password: string;
@@ -19,15 +20,16 @@ export interface AuthState {
 }
 
 export interface UserType {
-    userId: string
+    userId: number
     username: string
     name: string
     email: string
     password: string
+    avatar: string
 }
 
 export interface RootUser {
-    user: UserType[];
+    users: UserType[];
 }
 
 // the root state

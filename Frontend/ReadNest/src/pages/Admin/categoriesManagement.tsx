@@ -13,12 +13,13 @@ import { useEffect, useState } from "react";
 
 const Categories = () => {
   const [Data, setData] = useState<CategoryRoot | null>(null); // all the categories info
-  const {Page, setPage, PageSize, setPageSize, Total, setTotal} = usePage();
+  const { Page, setPage, PageSize, setPageSize, Total, setTotal } = usePage();
 
   const [deleteSuccess, setDeleteSuccess] = useState<Boolean>(false);
   const [addSuccess, setAddSuccess] = useState<Boolean>(false);
   const [editSuccess, setEditSuccess] = useState<Boolean>(false);
   const [noSelect, setNoSelect] = useState<Boolean>(false);
+  const [CategoryExist, setCategoryExist] = useState<boolean>(false);
 
   const {
     selectedItems: selectedCategories, // 已选择的
@@ -93,26 +94,43 @@ const Categories = () => {
         category, description
       }
 
-      
       const data = await addCategory(newCategory);
-      const newData: Category = data;
-      console.log("return object:" + newData)
+      if (data === 0) {
+        setEmptyInput({ ...EmptyInput, category: true })
+        setCategoryExist(true);
+      } else {
+        setCategoryExist(false)
+        console.log("huilaide ", data)
+        const newData: Category = data;
+        // console.log("return object:" + newData)
 
-      closeDialog("addNewCategory");
-      setData(prevCategories => {
-        const updatedCategories = prevCategories ? [...prevCategories.categories, newData] : [newData];
+        closeDialog("addNewCategory");
+        setData(prevCategories => {
+          const updatedCategories = prevCategories ? [...prevCategories.categories, newData] : [newData];
 
-        setTotal(updatedCategories.length);
-        return {
-          ...prevCategories,
-          categories: updatedCategories
-        };
-      });
+          setTotal(updatedCategories.length);
+          return {
+            ...prevCategories,
+            categories: updatedCategories
+          };
+        });
+        setAddSuccess(true);
+        setCategory("");
+        setDescription("");
+      }
 
-      setAddSuccess(true);
-      setCategory("");
-      setDescription("");
     }
+  }
+
+  const handleClose = () => {
+    setCategory("");
+    setDescription("");
+    setCategoryExist(false);
+    closeDialog("addNewCategory")
+    setEmptyInput({
+      category: false,
+      description: false
+    })
   }
 
   const openEditModal = (mode: string, category: string, description: string) => {
@@ -128,8 +146,10 @@ const Categories = () => {
     const newCategory: Category = {
       categoryId,
       category: editcategory,
-      description: editdescription
+      description: editdescription,
+      totalBooks: 0 //backend will not edit the totals num, so can pass any number
     }
+
     const newData = await editCategory(newCategory);
 
     setData(prevCategories => {
@@ -146,12 +166,11 @@ const Categories = () => {
     setEditSuccess(true);
   }
 
-
   return (
     <div className="p-4">
       {noSelect && <Alert content="Please select at least one category" alertType="alert-error" onClose={() => setNoSelect(false)} />}
       {deleteSuccess && <Alert content="Delete successfully" alertType="alert-success" onClose={() => setDeleteSuccess(false)} />}
-      {addSuccess && <Alert content="Add new category successfully" alertType="alert-success" onClose={() => setDeleteSuccess(false)} />}
+      {addSuccess && <Alert content="Add new category successfully" alertType="alert-success" onClose={() => setAddSuccess(false)} />}
       {editSuccess && <Alert content="Edit category successfully" alertType="alert-success" onClose={() => setEditSuccess(false)} />}
 
 
@@ -186,6 +205,7 @@ const Categories = () => {
               </th>
               <td className="overflow-hidden text-ellipsis whitespace-nowrap text-center" title={category.category}>{category.category}</td>
               <td className="overflow-hidden text-ellipsis whitespace-nowrap" title={category.description}>{category.description}</td>
+              <td className="overflow-hidden text-ellipsis whitespace-nowrap text-center">{category.totalBooks}</td>
               <td>
                 <button
                   onClick={() => openEditModal(`EditCategory-${category.categoryId}`, category.category, category.description)}
@@ -256,12 +276,12 @@ const Categories = () => {
             <span className="label-text mb-2 text-md">Category</span>
             <input
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              onClick={() => setEmptyInput({ ...EmptyInput, category: false })}
+              onChange={(e) => { setCategory(e.target.value); setCategoryExist(false) }}
+              onClick={() => { setEmptyInput({ ...EmptyInput, category: false }); setCategoryExist(false) }}
               type="text" placeholder="Type a category"
               className="input input-bordered" />
             <span className={`text-red-700 text-sm ${EmptyInput.category ? 'visible' : 'invisible'}`}>
-              Please enter the category
+              {CategoryExist ? "This category has already exist" : "Please enter the category"}
             </span>
           </label>
           <label className="form-control">
@@ -282,7 +302,7 @@ const Categories = () => {
               <button
                 onClick={(e) => add(e)}
                 className="btn">Comfirm</button>
-              <button className="btn ml-5">Cancel</button>
+              <button className="btn ml-5" onClick={handleClose}>Cancel</button>
             </form>
           </div>
         </div>

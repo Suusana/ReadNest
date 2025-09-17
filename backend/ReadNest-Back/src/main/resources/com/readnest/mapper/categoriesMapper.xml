@@ -3,7 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.readnest.mapper.categoriesMapper">
-
+<!--    add 1 to toal_book for each ids = categoryid-->
+    <update id="addTotalBook">
+        update categories set total_books = total_books+1
+        where category_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="deleteTotalBooksByTagIds">
+        update categories
+        set total_books =total_books-1
+        where category_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
     <!--    delete categories by their ids-->
     <delete id="deleteCategory">
         delete
@@ -13,4 +28,23 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="findIdByTags" resultType="java.lang.Integer">
+        select category_id
+        from categories
+        where category in
+        <foreach collection="tags" item="tag" separator="," open="(" close=")">
+            #{tag}
+        </foreach>
+        
+    </select>
+    <select id="findTagsByIds" resultType="java.lang.String">
+        select category
+        from categories
+        where category_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        #{id}
+        </foreach>
+
+    </select>
 </mapper>

@@ -23,6 +23,7 @@ public class loginController {
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
         User resUser = loginservice.login(user.getEmail(),user.getPassword());
+        System.out.println(resUser.toString());
         if (resUser != null) {
             Map<String, Object> claims = new HashMap<>();
             claims.put("id", resUser.getUserId());
@@ -30,6 +31,7 @@ public class loginController {
             claims.put("email", resUser.getEmail());
             String jwt = JwtUtil.generateJwt(claims);
             LoginResponse loginResponse = new LoginResponse(jwt, resUser);
+
             return Result.success(loginResponse);
         } else {
             return Result.error("Email or password incorrect");

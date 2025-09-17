@@ -1,7 +1,6 @@
 import { RootState } from "@/types/user";
 import { useDispatch, useSelector } from "react-redux";
 import Svg from "@/components/svg";
-import huhCat from "@/assets/huhCat.jpg"
 
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { clearUserInfo } from "@/store/user";
@@ -29,17 +28,16 @@ const Admin = () => {
     navigate("/login")
   }
 
-
   return <div>
     <div className="flex h-screen">
       {/* left menu */}
-      
+
       <ul className="menu text-base gbg-base-200 w-56 bg-slate-300 flex flex-col gap-2 fixed top-0 left-0 h-screen z-10">
         {/* admin info */}
         <div className="avatar mx-auto grid grid-cols-1 mt-10">
 
           <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
-            <img src={huhCat} />
+            <img src={user.avatar} />
           </div>
           <p className="text-2xl font-bold my-4 mx-auto">{user.username}</p>
         </div>
@@ -62,7 +60,7 @@ const Admin = () => {
         </li>
 
         {/* the popup */}
-        <Reminder id="logout" title="Log Out Reminder" content="Are you sure you want to log out?" onClick={Logout}/>
+        <Reminder id="logout" title="Log Out Reminder" content="Are you sure you want to log out?" onClick={Logout} />
       </ul>
 
       {/* right content */}
@@ -77,9 +75,9 @@ const Admin = () => {
 
             <p className="text-5xl font-bold mx-5 mt-3 text-teal-700 mb-10">Strat your work</p>
             {/* cards */}
-            <div className="flex flex-wrap justify-evenly space-x-16" >
+            <div className="flex flex-wrap justify-evenly" >
               {CardList.map((item) => (
-                <div className="card bg-base-100 w-1/4 shadow-xl mb-10" key={item.key}>
+                <div className="card bg-base-100 w-1/5 shadow-xl mb-20" key={item.key}>
                   <figure>
                     <img
                       src={item.link}

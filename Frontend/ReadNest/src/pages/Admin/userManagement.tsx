@@ -1,33 +1,35 @@
 import { UsersHeaders } from "@/assets/staticData";
 import Pagination from "@/components/Pagination";
 import RecordsPerPage from "@/components/RecordsPerPage";
-import Reminder from "@/components/reminder";
 import TableHeader from "@/components/tableHeader";
 import usePage from "@/hooks/usePage";
 import useSelection from "@/hooks/useSelection";
 import { fetchUsers } from "@/service/userService";
-import { RootState, RootUser, UserType } from "@/types/user";
-import { openModal } from "@/utils/uiInteract";
+import { RootUser } from "@/types/user";
 import { useEffect, useState } from "react";
 
 const UserManage = () => {
-  const [Data, setData] = useState<RootUser | null>(null); // all the categories info
-  const { Page, setPage, PageSize, setPageSize, Total, setTotal } = usePage();
+  const [Data, setData] = useState<RootUser>(); // all the categories info
+  const {Page, setPage, PageSize, setPageSize, Total, setTotal } = usePage();
   const totalPages = Math.ceil(Total / PageSize);
-  // const {
-  //   changePage
-  // } = useSelection(
-  //   Data?.categories || [], // 数据源
-  //   (Category) => Category.categoryId // 唯一标识函数
-  // );
+  
+  const {changePage} = useSelection(Data?.users || [],(user) => user.userId);
+
+  //loading users
+  const loadData = async () => {
+    try {
+      const res = await fetchUsers(Page, PageSize);
+      
+      const Total = res.data.data.total; //total records
+      setTotal(Total)
+      setData({ users: res.data.data.rows })
+    } catch (err) {
+      console.error("Fail to load users:", err);
+    }
+  };
 
   useEffect(() => {
-    const data = fetchUsers(Page, PageSize);
-    console.log(data)
-    // const Total = res.data.data.total; //total records
-
-    // setTotal(Total)
-    // setData({ users: res.data.data.rows })
+    loadData();
   }, [])
 
   return (
@@ -39,22 +41,27 @@ const UserManage = () => {
       </div>
       <table className="table table-zebra w-full table-fixed">
         <TableHeader headers={UsersHeaders} showCheckbox={false} />
-        {/* <tbody>
-          {Data?.categories.map((category) => (
-            <tr key={category.categoryId}>
-              <td className="overflow-hidden text-ellipsis whitespace-nowrap text-center" title={category.category}>{category.category}</td>
-              <td className="overflow-hidden text-ellipsis whitespace-nowrap" title={category.description}>{category.description}</td>
-              <td>
-              <button
-                  className="btn btn-outline btn-success mr-3">Edit</button>
+        <tbody>
+          {Data?.users.map((user) => (
+            <tr key={user.userId}>
+              <th className="w-16" >
+              </th>
+              <td className="overflow-hidden text-ellipsis whitespace-nowrap" >
+                <div className="mask mask-squircle h-12 w-12">
+                  <img
+                    src={user.avatar}/>
+                </div>
               </td>
+              <td className="overflow-hidden text-ellipsis whitespace-nowrap" title={user.username}>{user.username}</td>
+              <td className="overflow-hidden text-ellipsis whitespace-nowrap" title={user.name}>{user.name}</td>
+              <td className="overflow-hidden text-ellipsis whitespace-nowrap" title={user.email}>{user.email}</td>
             </tr>
           ))}
-        </tbody> */}
+        </tbody>
       </table>
 
       {/* Pagination */}
-      {/* <Pagination Page={Page} totalPages={totalPages} setPage={setPage} changePage={changePage} /> */}
+      <Pagination Page={Page} totalPages={totalPages} setPage={setPage} changePage={changePage} />
     </div>
   );
 }

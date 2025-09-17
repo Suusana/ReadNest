@@ -10,7 +10,7 @@ const Reminder: React.FC<ReminderProps> = ({ id, title, content, onClick }) => {
                     <form method="dialog">
                         <button
                             onClick={onClick}
-                            className="btn">Yes</button>
+                            className="btn btn-primary">Yes</button>
                         <button className="btn ml-5">No</button>
                     </form>
                 </div>

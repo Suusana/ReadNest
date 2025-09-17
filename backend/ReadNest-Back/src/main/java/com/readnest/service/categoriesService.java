@@ -21,4 +21,12 @@ public interface categoriesService {
     void editCategory(Category category);
 
     Category findById(Category category);
+
+    Category findByCategory(String category);
+
+    List<Integer> findIdByTags(List<String> tags);
+
+    void addTotalBook(List<Integer> ids);
+
+    void deleteTotalBooksByTagIds(List<Integer> ids);
 }

@@ -1,8 +1,4 @@
-interface PerPageProps {
-    PageSize: number
-    Total: number
-    setPageSize: (size: number) => void
-}
+import { PerPageProps } from "@/types/staticData";
 
 const RecordsPerPage: React.FC<PerPageProps> = ({ PageSize, Total, setPageSize }) => {
     return (

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.readnest.mapper.bookCateMapper">
+    <insert id="addBookTags">
+        insert into book_categories (book_id, category_id)
+        values
+        <foreach collection='ids' item='categoryId' separator=','>
+            (#{bookId}, #{categoryId})
+        </foreach>
+
+    </insert>
+    <delete id="DeleteByTagIds">
+        delete from
+        book_categories
+        where category_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getTagsIdsByIds" resultType="java.lang.Integer">
+        select category_id
+        from book_categories
+        where book_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

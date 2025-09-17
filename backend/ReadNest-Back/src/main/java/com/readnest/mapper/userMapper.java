@@ -13,7 +13,7 @@ public interface userMapper {
      * find the user who is logining in
      * @return
      */
-    @Select("select user_id, username, name, email, password from user where email= #{email} and password = #{password}")
+    @Select("select * from user where email= #{email} and password = #{password}")
     User findUser(@Param("email") String email, @Param("password") String password);
 
     /**
@@ -29,9 +29,22 @@ public interface userMapper {
      * @param username
      * @return
      */
-    @Select("select user_id, username, name, email, password from user where username = #{username}")
+    @Select("select * from user where username = #{username}")
     User findByusername(String username);
 
+    /**
+     * return the users
+     * @return
+     */
     @Select("select * from user where user_id != 1000")
-    List<Book> fetchUsers();
+    List<User> fetchUsers();
+
+    @Select("select avatar from user where user_id = #{userId}")
+    String getUrlById(String userId);
+
+    @Update("update user set avatar = #{url} where user_id = #{userId}")
+    void updateAvatar(String userId, String url);
+
+    @Update("update user set password = #{password} where user_id = #{userId}")
+    void updatePassword(String userId, String password);
 }

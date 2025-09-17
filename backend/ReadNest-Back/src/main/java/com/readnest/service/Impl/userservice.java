@@ -20,10 +20,25 @@ public class userservice implements userService {
     public Pages fetchUser(Integer page, Integer pageSize) {
         PageHelper.startPage(page, pageSize);
 
-        List<Book> bookList = usermapper.fetchUsers();
+        List<User> bookList = usermapper.fetchUsers();
 
-        Page<Book> p = (Page<Book>)bookList;
+        Page<User> p = (Page<User>)bookList;
         Pages APage = new Pages(p.getTotal(),p.getResult());
         return APage;
+    }
+
+    @Override
+    public String getUrlById(String userId) {
+        return usermapper.getUrlById(userId);
+    }
+
+    @Override
+    public void updateAvatar(String userId, String url) {
+        usermapper.updateAvatar(userId,url);
+    }
+
+    @Override
+    public void updatePassword(String userId, String password) {
+        usermapper.updatePassword(userId,password);
     }
 }

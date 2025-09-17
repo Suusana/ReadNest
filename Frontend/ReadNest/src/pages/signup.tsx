@@ -23,7 +23,6 @@ const Signup = () => {
             ...prevData,
             [id]: value
         }))
-
         dispatch(Register({ field: id as keyof AuthState, value }));
     }
 

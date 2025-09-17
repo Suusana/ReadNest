@@ -62,4 +62,24 @@ public class categoiesService implements categoriesService {
         return mapper.findById(category);
     }
 
+    @Override
+    public Category findByCategory(String category) {
+        return mapper.findByCategory(category);
+    }
+
+    @Override
+    public List<Integer> findIdByTags(List<String> tags) {
+        return mapper.findIdByTags(tags);
+    }
+
+    @Override
+    public void addTotalBook(List<Integer> ids) {
+        mapper.addTotalBook(ids);
+    }
+
+    @Override
+    public void deleteTotalBooksByTagIds(List<Integer> ids) {
+        mapper.deleteTotalBooksByTagIds(ids);
+    }
+
 }

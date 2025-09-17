@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.readnest.mapper.recordMapper">
+
+    <select id="searchRecords" resultType="com.readnest.pojo.Record">
+        SELECT *
+        FROM borrow_record
+        <where>
+            <if test="searchItem != null and searchItem != ''">
+                (username LIKE concat('%', #{searchItem}, '%') ESCAPE '\\'
+                OR book_name LIKE concat('%', #{searchItem}, '%') ESCAPE '\\')
+            </if>
+
+            <if test="status != null and status != ''">
+                <if test="searchItem == null or searchItem == ''">
+                    status = #{status}
+                </if>
+                <if test="searchItem != null and searchItem != ''">
+                    AND status = #{status}
+                </if>
+            </if>
+
+            <if test="startDate != null and endDate != null">
+                <if test="searchItem == null or searchItem == ''">
+                    (borrow_date >= #{startDate} OR return_date BETWEEN "1900-01-01" AND #{endDate})
+                </if>
+                <if test="searchItem != null and searchItem != ''">
+                    AND (borrow_date >= #{startDate} OR return_date BETWEEN "1900-01-01" AND #{endDate})
+                </if>
+            </if>
+
+            <if test="startDate != null and endDate == null">
+                <if test="searchItem == null or searchItem == ''">
+                    borrow_date >= #{startDate}
+                </if>
+                <if test="searchItem != null and searchItem != ''">
+                    AND borrow_date >= #{startDate}
+                </if>
+            </if>
+
+            <if test="endDate != null and startDate == null">
+                <if test="searchItem == null or searchItem == ''">
+                    return_date BETWEEN "1900-01-01" AND #{endDate}
+                </if>
+                <if test="searchItem != null and searchItem != ''">
+                    AND return_date BETWEEN "1900-01-01" AND #{endDate}
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>
