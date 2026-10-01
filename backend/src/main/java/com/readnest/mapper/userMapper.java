@@ -1,7 +1,5 @@
 package com.readnest.mapper;
 
-
-import com.readnest.pojo.Book;
 import com.readnest.pojo.User;
 import org.apache.ibatis.annotations.*;
 

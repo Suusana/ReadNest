@@ -3,7 +3,7 @@ import { getToken } from "./token";
 
 const httpInstance = axios.create({
     baseURL: 'http://localhost:8080',
-    timeout: 5000
+    timeout: 50000
 })
 
 // 2 interceptors
